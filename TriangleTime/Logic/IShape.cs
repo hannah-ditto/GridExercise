@@ -10,8 +10,11 @@ namespace TriangleTime.Logic
 
         #region Public Methods
 
-        bool ValidateShape(Vertex[] vertices);
-        
+        bool ValidateShapeCoordinates(Vertex[] vertices);
+        string ConvertCoordinatesToShapeName(Vertex[] vertices);
+        Vertex[] ConvertShapeNameToCoordinates(string shapeName);
+
         #endregion
+
     }
 }

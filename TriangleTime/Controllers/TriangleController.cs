@@ -15,6 +15,7 @@ namespace TriangleTime.Controllers
 
         #endregion
 
+
         #region Construction/Finalization
 
         public TriangleController(ILogger<TriangleController> logger)
@@ -24,7 +25,7 @@ namespace TriangleTime.Controllers
 
         #endregion
 
-        #region Routes
+        #region Methods
 
         [HttpPost("~/UpdatePx")]
         public int UpdatePxLength(int newLength)
@@ -35,9 +36,9 @@ namespace TriangleTime.Controllers
         [HttpPost("~/UpdateGridHeight")]
         public void UpdateGridHeight(int newHeight)
         {
-            if (newHeight > 26 || newHeight < 0)
+            if (newHeight > 26 || newHeight < 1)
             {
-                _logger.Log(LogLevel.Error,"Heights greater than 26 or less than 0 are ignored.");
+                _logger.Log(LogLevel.Error,"Heights greater than 26 or less than 1 are ignored.");
             }
             else
             {

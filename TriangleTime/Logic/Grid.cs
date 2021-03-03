@@ -12,9 +12,11 @@ namespace TriangleTime.Logic
 
         #region Public Methods
 
+        // for converting to correct pixel length 
+
         public static Vertex[] MultiplyByPixelLength(Vertex[] vertices)
         {
-            foreach (var vertex in vertices)
+            foreach (Vertex vertex in vertices)
             {
                 vertex.XCoord = vertex.XCoord * SideLengthInPx;
                 vertex.YCoord = vertex.YCoord * SideLengthInPx;
@@ -25,7 +27,7 @@ namespace TriangleTime.Logic
 
         public static Vertex[] DivideByPixelLength(Vertex[] vertices)
         {
-            foreach (var vertex in vertices)
+            foreach (Vertex vertex in vertices)
             {
 
                 if (vertex.XCoord % SideLengthInPx != 0 || vertex.YCoord % SideLengthInPx != 0)

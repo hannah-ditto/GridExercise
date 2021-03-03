@@ -17,7 +17,7 @@ namespace TriangleTime.Logic
 
         #region Properties
 
-        public Vertex[] Vertices { get; set; } = new Vertex[] { new Vertex(0, 0), new Vertex(0, 0), new Vertex(0, 0) };
+        public Vertex[] Vertices { get; set; } = new Vertex[3];
         public string ShapeName { get; set; }
         public int SideLengthInPx
         {
@@ -38,42 +38,39 @@ namespace TriangleTime.Logic
         public Triangle (Vertex[] vertices)
         {
             Grid.DivideByPixelLength(vertices);
-            if (ValidateShape(vertices))
+            if (ValidateShapeCoordinates(vertices))
             {
                 Vertices = vertices;
+                ShapeName = ConvertCoordinatesToShapeName(vertices);
             }
-            ColNumber = SetColumnNumber();
-            RowName = SetRowName();
-            ShapeName = CreateShapeName();
+            
             Grid.MultiplyByPixelLength(Vertices);
         }
-
+        
         public Triangle(string shapeName)
         {
             ShapeName = shapeName;
-            SplitTriangleName(ShapeName);
-            SetXCoordinates();
-            SetYCoordinates();
-            AddVertices();
+            Vertices = ConvertShapeNameToCoordinates(shapeName);
             Grid.MultiplyByPixelLength(Vertices);
         }
+
         #endregion
 
         #region Public Methods
         
-        public bool ValidateShape(Vertex[] vertices)
+        public bool ValidateShapeCoordinates(Vertex[] vertices)
         {
+            
             // this must remain true for the entire duration of this method in order to validate
             bool isTriangle;
             try
             {
-                FindUnmatchedVertices(vertices);
+                SetMatchStatusForVertices(vertices, out _unmatchedX,
+                    out _unmatchedY, out _matchedX,
+                    out _matchedY);
 
-                // check the X or Y coordinate number of the matching vertices
-                _matchedY = vertices.First(y => y.YCoord != _unmatchedY.YCoord);
-                _matchedX = vertices.First(x => x.XCoord != _unmatchedX.XCoord);
                 isTriangle = (ValidateCoordinateProximity(_unmatchedX.XCoord, _matchedX.XCoord) &&
-                ValidateCoordinateProximity(_unmatchedY.YCoord, _matchedY.YCoord));
+                              ValidateCoordinateProximity(_unmatchedY.YCoord, _matchedY.YCoord));
             }
             catch (Exception e)
             {
@@ -84,42 +81,60 @@ namespace TriangleTime.Logic
             return isTriangle;
 
         }
+        public Vertex[] ConvertShapeNameToCoordinates(string shapeName)
+        {
+            SplitTriangleName(ShapeName);
+            AddVertices();
+            return AddVertices();
+        }
+        public string ConvertCoordinatesToShapeName(Vertex[] vertices)
+        {
+            ColNumber = SetColumnNumber();
+            RowName = SetRowName();
+            return RowName.ToString() + ColNumber;
+        }
+
 
         #endregion
 
         #region Private Methods
-        
+
         // for converting from name to coordinates
         private void SplitTriangleName(string TriangleName)
         {
             Regex r = new Regex(@"(?<Col>[A-Z]+)(?<Row>[0-9]+)",
                 RegexOptions.Compiled);
 
-            var rowMatch= r.Match(TriangleName).Groups["Col"].Value;
-            var colMatch= r.Match(TriangleName).Groups["Row"].Value;
+            string rowMatch= r.Match(TriangleName).Groups["Col"].Value;
+            string colMatch= r.Match(TriangleName).Groups["Row"].Value;
 
             RowName = Convert.ToChar(rowMatch);
             ColNumber = Convert.ToInt32(colMatch);
         }
 
-        private string CreateShapeName()
+  
+        private Vertex[] AddVertices()
         {
-            return RowName.ToString()+ColNumber;
-        }
+            SetXCoordinates();
+            SetYCoordinates();
 
-        private void AddVertices()
-        {
-           // Console.WriteLine($"Matched X: {_matchedX.XCoord}, Unmatched X: {_unmatchedX.XCoord}.");
-            //Console.WriteLine($"Matched Y: {_matchedY.YCoord}, Unmatched Y: {_unmatchedY.YCoord}.");
+            Vertex[] vertexArr =
+            {
+               new Vertex(0,0),
+               new Vertex(0,0),
+               new Vertex(0,0)
+            };
 
-            Vertices[0].XCoord = _matchedX.XCoord;
-            Vertices[0].YCoord = _matchedY.YCoord;
+            vertexArr[0].XCoord = _matchedX.XCoord;
+            vertexArr[0].YCoord = _matchedY.YCoord;
 
-            Vertices[1].XCoord = _unmatchedX.XCoord;
-            Vertices[1].YCoord = _matchedY.YCoord;
+            vertexArr[1].XCoord = _unmatchedX.XCoord;
+            vertexArr[1].YCoord = _matchedY.YCoord;
 
-            Vertices[2].XCoord = _matchedX.XCoord;
-            Vertices[2].YCoord = _unmatchedY.YCoord;
+            vertexArr[2].XCoord = _matchedX.XCoord;
+            vertexArr[2].YCoord = _unmatchedY.YCoord;
+
+            return vertexArr;
         }
 
         private void SetYCoordinates()
@@ -176,17 +191,15 @@ namespace TriangleTime.Logic
 
         }
 
-        // for converting to correct pixel length 
-
         // for converting from coordinates to name
-
-        private void FindUnmatchedVertices(Vertex[] vertices)
+        private static void SetMatchStatusForVertices(Vertex[] vertices, out Vertex unmatchedX, out Vertex unmatchedY, out Vertex matchedX, out Vertex matchedY)
         {
+
             Vertex referenceVertex = vertices[0];
             // either using the X or Y coordinate of the reference vertex
             // we check to find which other Xs or Ys are unmatched
 
-            IEnumerable<Vertex> unmatchedXSet = vertices.Where(x => x.YCoord != referenceVertex.YCoord);
+            IEnumerable<Vertex> unmatchedXSet = vertices.Where(x => x.XCoord != referenceVertex.XCoord);
             IEnumerable<Vertex> unmatchedYSet = vertices.Where(y => y.YCoord != referenceVertex.YCoord);
 
             // set the unmatched X vertex
@@ -194,34 +207,47 @@ namespace TriangleTime.Logic
             {
                 // if we found 2 that didn't match, the reference vertex contained the unmatched X
                 case 2:
-                    _unmatchedX = referenceVertex;
+                    unmatchedX = referenceVertex;
                     break;
                 // if we only found 1 that didn't match, set it as the unmatched X
                 case 1:
-                    _unmatchedX = unmatchedXSet.First();
+                    unmatchedX = unmatchedXSet.First();
                     break;
+                // if we find anything else, this is not a valid triangle
                 default:
                     throw new Exception("Not a valid triangle.");
             }
 
             // set the unmatched Y vertex
-
             switch (unmatchedYSet.ToList().Count)
             {
                 // if we found 2 that didn't match, the reference vertex contained the unmatched Y
                 case 2:
-                    _unmatchedY = referenceVertex;
+                    unmatchedY = referenceVertex;
                     break;
                 // if we only found 1 that didn't match, set it as the unmatched Y
                 case 1:
-                    _unmatchedY = unmatchedYSet.First();
+                    unmatchedY = unmatchedYSet.First();
                     break;
+                // if we find anything else, this is not a valid triangle
                 default:
                     throw new Exception("Not a valid triangle.");
             }
+
+            int unmatchedXCoord = unmatchedX.XCoord;
+            int unmatchedYCoord = unmatchedY.YCoord;
+
+
+            // once we know which are the unmatched, we can pick from the other 2 in the set to define the 'matched' number
+            matchedY = vertices.First(y => y.YCoord != unmatchedYCoord);
+            matchedX = vertices.First(x => x.XCoord != unmatchedXCoord);
+
+
+
+
         }
 
-        private bool ValidateCoordinateProximity(int unmatchedCoord, int matchedCoord)
+        private static bool ValidateCoordinateProximity(int unmatchedCoord, int matchedCoord)
         {
            // check to make sure that X or Y coords are not more than 1 apart
            int differenceX = unmatchedCoord - matchedCoord;
@@ -274,22 +300,24 @@ namespace TriangleTime.Logic
         private int SetColumnNumber()
         {
             int colNumber;
-            int unmatchedXCoord = _unmatchedX.XCoord;
-            int compareUnmatchedX = _unmatchedX.XCoord.CompareTo(_matchedX.XCoord);
+            int matchedXCoord = _matchedX.XCoord;
+            int compareMatchedX = _matchedX.XCoord.CompareTo(_unmatchedX.XCoord);
 
-            if (compareUnmatchedX < 0)
+            if (compareMatchedX < 0)
             {
-                // If the unmatched X coordinate is less than the matched X coords
-                // then it is on the left side of the triangle, so we double the 
-                // number and then add 1
-                colNumber = (unmatchedXCoord * 2)+1;
+                // If the matched X coordinate is less than the unmatched X coords
+                // then they are on the left side of the triangle, so we double the 
+                // matched X coord to get the preceeding column and add 1 to get
+                // the current column
+ 
+                colNumber = (matchedXCoord *2)+1;
             }
             else
             {
-                // Or if not, and the unmatched X coordinate is greater than the 
-                // matched X coords, the unmatched coordinate is on the right, so
-                // simply double that number to get the column
-                colNumber = (unmatchedXCoord * 2);
+                // Or if not, and the matched X coordinates are greater than the 
+                // unmatched X coord, then the matched coordinates are on the right, so
+                // we double for the matched X coordinate to get the current column
+                colNumber = (matchedXCoord * 2);
             }
 
             return colNumber;
