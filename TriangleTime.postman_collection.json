@@ -1,0 +1,274 @@
+{
+	"info": {
+		"_postman_id": "c633df6c-f56a-4a37-9878-658143381577",
+		"name": "TriangleTime",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetTriangleByCoordsF1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByCoords?x1=0&y1=0&x2=10&y2=0&x3=0&y3=10",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByCoords"
+					],
+					"query": [
+						{
+							"key": "x1",
+							"value": "0"
+						},
+						{
+							"key": "y1",
+							"value": "0"
+						},
+						{
+							"key": "x2",
+							"value": "10"
+						},
+						{
+							"key": "y2",
+							"value": "0"
+						},
+						{
+							"key": "x3",
+							"value": "0"
+						},
+						{
+							"key": "y3",
+							"value": "10"
+						}
+					]
+				},
+				"description": "Get a triangle using a set of coordinates."
+			},
+			"response": []
+		},
+		{
+			"name": "GetTriangleByCoordsB7",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByCoords?x1=30&y1=40&x2=40&y2=40&x3=30&y3=50",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByCoords"
+					],
+					"query": [
+						{
+							"key": "x1",
+							"value": "30"
+						},
+						{
+							"key": "y1",
+							"value": "40"
+						},
+						{
+							"key": "x2",
+							"value": "40"
+						},
+						{
+							"key": "y2",
+							"value": "40"
+						},
+						{
+							"key": "x3",
+							"value": "30"
+						},
+						{
+							"key": "y3",
+							"value": "50"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTriangleByCoordsF6",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByCoords?x1=20&y1=10&x2=30&y2=10&x3=30&y3=0",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByCoords"
+					],
+					"query": [
+						{
+							"key": "x1",
+							"value": "20"
+						},
+						{
+							"key": "y1",
+							"value": "10"
+						},
+						{
+							"key": "x2",
+							"value": "30"
+						},
+						{
+							"key": "y2",
+							"value": "10"
+						},
+						{
+							"key": "x3",
+							"value": "30"
+						},
+						{
+							"key": "y3",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTriangleByNameE12",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByName?name=E12",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByName"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "E12"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTriangleByNameF4",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByName?name=F4",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByName"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "F4"
+						}
+					]
+				},
+				"description": "Get a triangle by its name"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTriangleByNameE3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/ByName?name=E3",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"ByName"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "E3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateGridCoords",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/UpdatePx?newLength=100",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"UpdatePx"
+					],
+					"query": [
+						{
+							"key": "newLength",
+							"value": "100"
+						}
+					]
+				},
+				"description": "Update the grid coordinates in px."
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateGridHeight",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44356/UpdateGridHeight?newHeight=16",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44356",
+					"path": [
+						"UpdateGridHeight"
+					],
+					"query": [
+						{
+							"key": "newHeight",
+							"value": "16"
+						}
+					]
+				},
+				"description": "Make the grid taller."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
