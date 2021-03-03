@@ -1,4 +1,5 @@
 using System.Net.Http;
+using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +15,7 @@ namespace TriangleTimeTests
         #region Constants
 
         public const int PixelLength = 10;
+        public const int UpdatedPixelLength = 100;
         public const int GridHeight = 6;
 
         // Left Triangle, Top Row
@@ -73,25 +75,31 @@ namespace TriangleTimeTests
         public void UpdatePx_GivenPixels_UpdatesGridSize()
         {
             // Arrange
-            var controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
+            TriangleController controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
+            Triangle testTriangle = new Triangle(Triangle1Name);
+            int testCoordinate = testTriangle.Vertices[0].YCoord;
 
             // Act
-            controller.UpdatePxLength(PixelLength);
-            var responseGridPxLength = Grid.SideLengthInPx;
+            controller.UpdatePxLength(UpdatedPixelLength);
+            int responseGridPxLength = Grid.SideLengthInPx;
 
             // Assert
-            Assert.AreEqual(PixelLength, responseGridPxLength);
+            Assert.AreEqual(UpdatedPixelLength, responseGridPxLength);
+            // Also check that triangles are updated
+            Assert.AreEqual((testCoordinate * UpdatedPixelLength), testTriangle.Vertices[0].YCoord);
+
+
         }
 
         [TestMethod]
         public void UpdateGridHeight_GivenHeight_UpdatesGridHeight()
         {
             // Arrange
-            var controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
+            TriangleController controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
 
             // Act
             controller.UpdateGridHeight(GridHeight);
-            var responseGridHeight = Grid.GridHeight;
+            int responseGridHeight = Grid.GridHeight;
 
             // Assert
             Assert.AreEqual(GridHeight, responseGridHeight);
@@ -101,10 +109,10 @@ namespace TriangleTimeTests
         public void GetTriangleByName_GivenValidName_ReturnsTriangleCoordinates()
         {
             // Arrange
-            var controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
+            TriangleController controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
 
             // Act
-            var response = controller.GetTriangleByName(Triangle1Name);
+            Triangle response = controller.GetTriangleByName(Triangle1Name);
 
             // Assert
             for (int i = 0; i < response.Vertices.Length; i++)
@@ -118,10 +126,10 @@ namespace TriangleTimeTests
         public void GetTriangleByCoords_GivenValidCoords_ReturnsTriangleName()
         {
             // Arrange
-            var controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
+            TriangleController controller = new TriangleController(new Logger<TriangleController>(new LoggerFactory()));
 
             // Act
-            var response = controller.GetTriangleByCoordinates(X1forT1, Y1forT1, X2forT1, Y2forT1, X3forT1, Y3forT1);
+            Triangle response = controller.GetTriangleByCoordinates(X1forT1, Y1forT1, X2forT1, Y2forT1, X3forT1, Y3forT1);
            
             // Assert
             Assert.IsTrue(response.ShapeName == Triangle1Name);
