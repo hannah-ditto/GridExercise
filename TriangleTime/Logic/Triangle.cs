@@ -12,18 +12,12 @@ namespace TriangleTime.Logic
         private Vertex _unmatchedY = new Vertex(0, 0);
         private Vertex _matchedY = new Vertex(0, 0);
         private Vertex _matchedX = new Vertex(0, 0);
-        private Vertex[] _vertices = new Vertex[3];
 
         #endregion
 
         #region Properties
 
-        public Vertex[] Vertices
-        {
-            get => Grid.MultiplyByPixelLength(_vertices);
-            set => _vertices = value;
-        }
-
+        public Vertex[] Vertices { get; set; } = new Vertex[3];
         public string ShapeName { get; set; }
         public int SideLengthInPx
         {
@@ -50,12 +44,14 @@ namespace TriangleTime.Logic
                 ShapeName = ConvertCoordinatesToShapeName(vertices);
             }
             
+            Grid.MultiplyByPixelLength(Vertices);
         }
         
         public Triangle(string shapeName)
         {
             ShapeName = shapeName;
             Vertices = ConvertShapeNameToCoordinates(shapeName);
+            Grid.MultiplyByPixelLength(Vertices);
         }
 
         #endregion

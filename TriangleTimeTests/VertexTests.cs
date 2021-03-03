@@ -19,7 +19,7 @@ namespace TriangleTimeTests
         public void CreateNewVertex_UsingXYCoords_ReturnsVertexObjectWithValidCoords()
         {
             // Arrange + Act
-            Vertex testVertex = new Vertex(XCoord, YCoord);
+            var testVertex = new Vertex(XCoord, YCoord);
 
             // Act + Assert
             Assert.AreEqual(XCoord, testVertex.XCoord);
